@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>To Do List App</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="banner">
+      <!-- <img src="./images/bg-desktop-dark.jpg" alt="banner" /> -->
+    </div>
+    <div class="continer">
+      <div class="todo-header">
+        <h1 class="todo-title">TODO</h1>
+        <div class="toggle" onclick="toggleTodo()">
+          <div class="circle"></div>
+          <img class="moon" src="./images/icon-moon.svg" alt="" />
+          <img class="sun" src="./images/icon-sun.svg" />
+        </div>
+      </div>
+      <div class="new_todo">
+        <div class="checked-item">
+          <div class="check-mark"></div>
+        </div>
+        <form onsubmit="addTodo(event)">
+          <input
+            id="addTodoInput"
+            type="text"
+            class="new-todo-input"
+            placeholder="Create a new todo..."
+          />
+        </form>
+      </div>
+      <div class="todo-list-continer">
+        <div class="todo-continer"></div>
+        <div class="todo__filters">
+          <div class="todo__filters__sides">
+            <p class="btn"><span id="items-left"></span> item(s) left</p>
+            <div class="btn btn--clear" id="clear-completed">
+              Clear Completed
+            </div>
+          </div>
+          <div class="todo__filters__center">
+            <span data-id="all" class="category">all</span>
+            <span data-id="active" class="category">active</span>
+            <span data-id="complete" class="category">complete</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <script src="./firebase.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
