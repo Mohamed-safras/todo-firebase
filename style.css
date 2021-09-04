@@ -8,7 +8,7 @@
   --clr-secondary: hsl(235, 24%, 19%);
   --clr-border: 2px solid hsl(237, 14%, 26%);
   --clr-linear: linear-gradient(135deg, #55ddff 0%, #c058f3 100%);
-
+  --clr-linear2: linear-gradient(135deg, #3ca8f0 30%, #8433cf 70%);
   --todo-input: hsl(234, 39%, 85%);
   --todo-input-placeholder: hsl(233, 14%, 35%);
   --todo-text: hsl(234, 39%, 85%);
@@ -51,9 +51,19 @@ body {
 }
 
 .todo-header {
+  position: sticky;
+  top: 0px;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.todo-header-scroll {
+  background: var(--clr-linear2);
+  height: 50px;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .todo-title {
@@ -336,4 +346,15 @@ body {
   color: var(--todo-text);
   left: 50%;
   transform: translate(-50%, -100%);
+}
+
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--todo-text);
+  font-weight: bold;
+  text-transform: capitalize;
+  margin: 10px;
 }

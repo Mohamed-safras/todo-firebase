@@ -1,3 +1,14 @@
+window.addEventListener("scroll", () => {
+  const scroll = window.pageYOffset;
+  const todoHeader = document.querySelector(".todo-header");
+
+  if (scroll > 10) {
+    todoHeader.classList.add("todo-header-scroll");
+  } else {
+    todoHeader.classList.remove("todo-header-scroll");
+  }
+});
+
 const toggleTodo = () => {
   const circle = document.querySelector(".circle");
   const moon = document.querySelector(".moon");
@@ -72,6 +83,12 @@ const domLoaded = () => {
   });
 };
 
+const activeItem = (item1, item2, item3) => {
+  item1.classList.add("active");
+  item2.classList.remove("active");
+  item3.classList.remove("active");
+};
+
 const getTodo = () => {
   db.collection("todo-items").onSnapshot((snapshot) => {
     let todoItem = [];
@@ -87,7 +104,18 @@ const getTodo = () => {
     let itemLeft = document.querySelector("#items-left");
     category.forEach((item) => {
       item.addEventListener("click", (e) => {
+        const all = document.querySelector("#all");
+        const active = document.querySelector("#active");
+        const complete = document.querySelector("#complete");
         let target = e.target.dataset.id;
+
+        if (target === "all") {
+          activeItem(all, active, complete);
+        } else if (target === "active") {
+          activeItem(active, all, complete);
+        } else if (target === "complete") {
+          activeItem(complete, all, active);
+        }
         let new_todo_item = todoItem.filter((item) => {
           if (item.status === target) {
             return item;
@@ -102,16 +130,16 @@ const getTodo = () => {
             displayTodo(new_todo_item);
           } else {
             let todoContiner = document.querySelector(".todo-continer");
-
-            todoContiner.innerHTML = `no items left`;
-            todoContiner.style.color = "#ffffff";
-            todoContiner.style.marginLeft = "10px";
+            todoContiner.innerHTML = `<div class="not-found"></>
+                                      <p>no items found</p>
+                                      </div>`;
           }
         }
       });
     });
   });
 };
+
 getTodo();
 
 const displayTodo = (items) => {
