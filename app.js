@@ -24,19 +24,6 @@ const toggleTodo = () => {
   }
 };
 
-const search = () => {
-  const filterBtn = document.querySelectorAll(".category");
-  filterBtn.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      const target = e.target.dataset.id;
-
-      console.log(target);
-    });
-  });
-};
-
-search();
-
 const addTodo = (e) => {
   e.preventDefault();
   let text = document.getElementById("addTodoInput");
@@ -51,7 +38,24 @@ const addTodo = (e) => {
   }
 };
 
-const getTodo = () => {
+const data = () => {
+  let todoItem = [];
+  db.collection("todo-items").onSnapshot((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      todoItem.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+  });
+  return todoItem;
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  domLoaded();
+});
+
+const domLoaded = () => {
   db.collection("todo-items").onSnapshot((snapshot) => {
     let todoItem = [];
 
@@ -64,17 +68,60 @@ const getTodo = () => {
 
     let itemLeft = document.querySelector("#items-left");
     itemLeft.innerHTML = `${todoItem.length}`;
-    generateTodo(todoItem);
+    displayTodo(todoItem);
   });
 };
 
-const generateTodo = (items) => {
+const getTodo = () => {
+  db.collection("todo-items").onSnapshot((snapshot) => {
+    let todoItem = [];
+
+    snapshot.docs.forEach((doc) => {
+      todoItem.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    let category = document.querySelectorAll(".category");
+    let itemLeft = document.querySelector("#items-left");
+    category.forEach((item) => {
+      item.addEventListener("click", (e) => {
+        let target = e.target.dataset.id;
+        let new_todo_item = todoItem.filter((item) => {
+          if (item.status === target) {
+            return item;
+          }
+        });
+        if (target === "all") {
+          itemLeft.innerHTML = `${todoItem.length}`;
+          displayTodo(todoItem);
+        } else {
+          itemLeft.innerHTML = `${new_todo_item.length}`;
+          if (new_todo_item.length > 0) {
+            displayTodo(new_todo_item);
+          } else {
+            let todoContiner = document.querySelector(".todo-continer");
+
+            todoContiner.innerHTML = `no items left`;
+            todoContiner.style.color = "#ffffff";
+            todoContiner.style.marginLeft = "10px";
+          }
+        }
+      });
+    });
+  });
+};
+getTodo();
+
+const displayTodo = (items) => {
   let innerTodo = "";
   let todoContiner = document.querySelector(".todo-continer");
 
   items.map((item) => {
     const { text, id, status } = item;
-    innerTodo += `<div class="todo-list-item">
+    innerTodo += `
+    <div class="todo-list-item">
     <div class="todo-item">
       <div class="checked-item">
         <div  data-id=${id} class="check-mark">
@@ -123,5 +170,3 @@ const markCompleted = (id) => {
     }
   });
 };
-
-getTodo();
