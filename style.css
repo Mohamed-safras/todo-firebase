@@ -52,8 +52,8 @@ body {
 
 .todo-header {
   position: sticky;
-  top: 0px;
-  z-index: 100;
+  top: 10px;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -166,11 +166,17 @@ body {
   align-items: center;
   justify-content: space-between;
   background: var(--todo-input);
+  position: sticky;
+  top: 70px;
+  z-index: 10;
 }
 
 .new_todo_light {
   background: #fff;
   color: #111;
+  position: sticky;
+  top: 70px;
+  z-index: 10;
 }
 .new_todo_dark {
   background: var(--clr-secondary);
@@ -357,4 +363,23 @@ body {
   font-weight: bold;
   text-transform: capitalize;
   margin: 10px;
+}
+
+.notification {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgb(0, 0, 0);
+  color: var(--todo-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+  transform: translateY(100px);
+  transition: all 0.25s ease-in-out;
+}
+
+.notification.active {
+  transform: translateY(0);
 }

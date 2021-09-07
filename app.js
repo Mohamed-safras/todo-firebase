@@ -1,3 +1,17 @@
+const all = document.querySelector("#all");
+const active = document.querySelector("#active");
+const complete = document.querySelector("#complete");
+
+window.addEventListener("DOMContentLoaded", () => {
+  domLoaded();
+});
+
+const activeItem = (item1, item2, item3) => {
+  item1.classList.add("active");
+  item2.classList.remove("active");
+  item3.classList.remove("active");
+};
+
 window.addEventListener("scroll", () => {
   const scroll = window.pageYOffset;
   const todoHeader = document.querySelector(".todo-header");
@@ -29,7 +43,6 @@ const toggleTodo = () => {
     sun.classList.remove("sunactive");
     moon.classList.remove("moonactive");
     banner.style.backgroundImage = "url(./images/bg-mobile-light.jpg)";
-
     new_todo.classList.add("new_todo_light");
     new_todo.classList.remove("new_todo_dark");
   }
@@ -43,50 +56,26 @@ const addTodo = (e) => {
       text: text.value,
       status: "active",
     });
+    notification("new item has been added", 3000);
     text.value = "";
   } else {
     alert("please enter a value");
   }
 };
 
-const data = () => {
-  let todoItem = [];
-  db.collection("todo-items").onSnapshot((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      todoItem.push({
-        id: doc.id,
-        ...doc.data(),
-      });
-    });
-  });
-  return todoItem;
-};
-
-window.addEventListener("DOMContentLoaded", () => {
-  domLoaded();
-});
-
 const domLoaded = () => {
   db.collection("todo-items").onSnapshot((snapshot) => {
     let todoItem = [];
-
     snapshot.docs.forEach((doc) => {
       todoItem.push({
         id: doc.id,
         ...doc.data(),
       });
     });
-
     let itemLeft = document.querySelector("#items-left");
     itemLeft.innerHTML = `${todoItem.length}`;
     displayTodo(todoItem);
   });
-};
-
-const activeItem = (item1, item2, item3) => {
-  item1.classList.add("active");
-  item2.classList.remove("active");
-  item3.classList.remove("active");
 };
 
 const getTodo = () => {
@@ -190,11 +179,24 @@ const markCompleted = (id) => {
         item.update({
           status: "complete",
         });
+        notification("item changed status from active to complete", 4000);
+        activeItem(all, active, complete);
       } else if (status === "complete") {
         item.update({
           status: "active",
         });
+        notification("item changed status from complete to active", 4000);
+        activeItem(all, active, complete);
       }
     }
   });
+};
+
+const notificationMessage = document.querySelector(".notification");
+const notification = (message, time) => {
+  notificationMessage.classList.add("active");
+  notificationMessage.innerHTML = `${message}`;
+  setTimeout(() => {
+    notificationMessage.classList.remove("active");
+  }, time);
 };
