@@ -74,8 +74,21 @@ const domLoaded = () => {
     });
     let itemLeft = document.querySelector("#items-left");
     itemLeft.innerHTML = `${todoItem.length}`;
-    displayTodo(todoItem);
+    if (todoItem.length > 0) {
+      displayTodo(todoItem);
+    } else {
+      notFound();
+    }
   });
+};
+
+const notification = (message, time) => {
+  const notificationMessage = document.querySelector(".notification");
+  notificationMessage.classList.add("active");
+  notificationMessage.innerHTML = `${message}`;
+  setTimeout(() => {
+    notificationMessage.classList.remove("active");
+  }, time);
 };
 
 const getTodo = () => {
@@ -112,16 +125,17 @@ const getTodo = () => {
         });
         if (target === "all") {
           itemLeft.innerHTML = `${todoItem.length}`;
-          displayTodo(todoItem);
+          if (todoItem.length > 0) {
+            displayTodo(todoItem);
+          } else {
+            notFound();
+          }
         } else {
           itemLeft.innerHTML = `${new_todo_item.length}`;
           if (new_todo_item.length > 0) {
             displayTodo(new_todo_item);
           } else {
-            let todoContiner = document.querySelector(".todo-continer");
-            todoContiner.innerHTML = `<div class="not-found"></>
-                                      <p>no items found</p>
-                                      </div>`;
+            notFound();
           }
         }
       });
@@ -131,6 +145,13 @@ const getTodo = () => {
 
 getTodo();
 
+function notFound() {
+  let todoContiner = document.querySelector(".todo-continer");
+  todoContiner.innerHTML = `<div class="not-found"></>
+                            <p>no items found</p>
+                            </div>`;
+}
+
 const displayTodo = (items) => {
   let innerTodo = "";
   let todoContiner = document.querySelector(".todo-continer");
@@ -138,7 +159,7 @@ const displayTodo = (items) => {
   items.map((item) => {
     const { text, id, status } = item;
     innerTodo += `
-    <div class="todo-list-item">
+    <div data-id=${id} class="todo-list-item">
     <div class="todo-item">
       <div class="checked-item">
         <div  data-id=${id} class="check-mark">
@@ -152,12 +173,15 @@ const displayTodo = (items) => {
       </div>
     </div>
     <div class="todo-remove">
-      <img class=" ${status === "complete" ? "add-close" : "remove-close"}" 
+      <img  id="remove" class=" ${
+        status === "complete" ? "add-close" : "remove-close"
+      }" 
       src="./images/icon-cross.svg" alt="" />
     </div>
   </div>`;
     todoContiner.innerHTML = innerTodo;
     check();
+    removeItem();
   });
 };
 
@@ -192,11 +216,12 @@ const markCompleted = (id) => {
   });
 };
 
-const notificationMessage = document.querySelector(".notification");
-const notification = (message, time) => {
-  notificationMessage.classList.add("active");
-  notificationMessage.innerHTML = `${message}`;
-  setTimeout(() => {
-    notificationMessage.classList.remove("active");
-  }, time);
+const removeItem = () => {
+  const removeTodo = document.querySelectorAll("#remove");
+  removeTodo.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const id = e.target.parentElement.parentElement.dataset.id;
+      db.collection("todo-items").doc(id).delete();
+    });
+  });
 };
