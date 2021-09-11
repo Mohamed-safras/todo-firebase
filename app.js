@@ -51,7 +51,8 @@ const toggleTodo = () => {
 const addTodo = (e) => {
   e.preventDefault();
   let text = document.getElementById("addTodoInput");
-  if (!text.value == "") {
+
+  if (!text.value.trim() == "") {
     db.collection("todo-items").add({
       text: text.value,
       status: "active",
@@ -173,9 +174,7 @@ const displayTodo = (items) => {
       </div>
     </div>
     <div class="todo-remove">
-      <img  id="remove" class=" ${
-        status === "complete" ? "add-close" : "remove-close"
-      }" 
+      <img  id="remove" class="add-close"
       src="./images/icon-cross.svg" alt="" />
     </div>
   </div>`;
@@ -222,6 +221,7 @@ const removeItem = () => {
     item.addEventListener("click", (e) => {
       const id = e.target.parentElement.parentElement.dataset.id;
       db.collection("todo-items").doc(id).delete();
+      notification("item has been deleted", 3000);
     });
   });
 };

@@ -231,7 +231,7 @@ body {
 
 .todo-item {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   cursor: pointer;
   transition: all 0.25s ease-in-out;
@@ -241,7 +241,7 @@ body {
 }
 .todo-list-item {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   border-bottom: var(--clr-border);
   padding: 0 20px;
