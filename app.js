@@ -2,10 +2,6 @@ const all = document.querySelector("#all");
 const active = document.querySelector("#active");
 const complete = document.querySelector("#complete");
 
-window.addEventListener("DOMContentLoaded", () => {
-  domLoaded();
-});
-
 const activeItem = (item1, item2, item3) => {
   item1.classList.add("active");
   item2.classList.remove("active");
@@ -64,25 +60,6 @@ const addTodo = (e) => {
   }
 };
 
-const domLoaded = () => {
-  db.collection("todo-items").onSnapshot((snapshot) => {
-    let todoItem = [];
-    snapshot.docs.forEach((doc) => {
-      todoItem.push({
-        id: doc.id,
-        ...doc.data(),
-      });
-    });
-    let itemLeft = document.querySelector("#items-left");
-    itemLeft.innerHTML = `${todoItem.length}`;
-    if (todoItem.length > 0) {
-      displayTodo(todoItem);
-    } else {
-      notFound();
-    }
-  });
-};
-
 const notification = (message, time) => {
   const notificationMessage = document.querySelector(".notification");
   notificationMessage.classList.add("active");
@@ -102,14 +79,18 @@ const getTodo = () => {
         ...doc.data(),
       });
     });
+    const category = document.querySelectorAll(".category");
+    const itemLeft = document.querySelector("#items-left");
 
-    let category = document.querySelectorAll(".category");
-    let itemLeft = document.querySelector("#items-left");
+    itemLeft.innerHTML = `${todoItem.length}`;
+    if (todoItem.length > 0) {
+      displayTodo(todoItem);
+    } else {
+      notFound();
+    }
+
     category.forEach((item) => {
       item.addEventListener("click", (e) => {
-        const all = document.querySelector("#all");
-        const active = document.querySelector("#active");
-        const complete = document.querySelector("#complete");
         let target = e.target.dataset.id;
 
         if (target === "all") {
@@ -119,6 +100,7 @@ const getTodo = () => {
         } else if (target === "complete") {
           activeItem(complete, all, active);
         }
+
         let new_todo_item = todoItem.filter((item) => {
           if (item.status === target) {
             return item;
@@ -202,14 +184,14 @@ const markCompleted = (id) => {
         item.update({
           status: "complete",
         });
-        notification("item changed status from active to complete", 4000);
         activeItem(all, active, complete);
+        notification("item changed status from active to complete", 4000);
       } else if (status === "complete") {
         item.update({
           status: "active",
         });
-        notification("item changed status from complete to active", 4000);
         activeItem(all, active, complete);
+        notification("item changed status from complete to active", 4000);
       }
     }
   });
